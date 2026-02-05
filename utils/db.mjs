@@ -1,9 +1,13 @@
-import * as pg from "pg";
-const { Pool } = pg.default;
+import dotenv from "dotenv";
+dotenv.config();
+
+import { Pool } from "pg";
 
 const connectionPool = new Pool({
-  connectionString:
-    "postgresql://postgres:Thanapol10@localhost:5432/LMS assignment",
+  connectionString: process.env.CONNECTION_STRING,
+  ssl: {
+    rejectUnauthorized: false, // ⭐ จำเป็นสำหรับ Supabase
+  },
 });
 
 export default connectionPool;
