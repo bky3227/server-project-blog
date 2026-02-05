@@ -96,6 +96,10 @@ app.get("/posts", async (req, res) => {
     })}
 })
 
-app.listen(port, () => {
-    console.log(`Server is running at ${port}`);
-});
+if (process.env.VERCEL !== "1") {
+  app.listen(PORT, () => {
+    console.log(`✅ Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
