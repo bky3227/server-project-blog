@@ -8,14 +8,14 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 
 app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:3000",
-      "https://server-project-blog.vercel.app/",
-    ],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  })
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "https://server-project-blog.vercel.app",
+        ],
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    })
 );
 
 connectionPool
@@ -84,22 +84,27 @@ app.get("/test", (req, res) => {
 });
 
 app.get("/posts", async (req, res) => {
-    try { 
+    try {
         let result = await connectionPool.query("select * from posts")
         return res.status(200).json({
             "data": result.rows
         })
 
-    } catch {
+    } catch (error) {
+        console.error("DB ERROR:", error);
+
         return res.status(500).json({
-            message: "Unable to fetch posts."
-    })}
+            message: "Unable to fetch posts.",
+            error: error.message,
+        });
+    }
+
 })
 
 if (process.env.VERCEL !== "1") {
-  app.listen(PORT, () => {
-    console.log(`✅ Server running on http://localhost:${PORT}`);
-  });
+    app.listen(port, () => {
+        console.log(`✅ Server running on http://localhost:${port}`);
+    });
 }
 
 export default app;
